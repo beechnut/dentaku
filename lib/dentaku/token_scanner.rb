@@ -36,6 +36,7 @@ module Dentaku
           :operator,
           :grouping,
           :dictionary,
+          :list,
           :case_statement,
           :comparator,
           :combinator,
@@ -123,6 +124,11 @@ module Dentaku
       def dictionary
         names = { open: '{', close: '}', comma: ',' }.invert
         new(:dictionary, '\{|\}|,(?=.*})', lambda { |raw| names[raw] })
+      end
+
+      def list
+        names = { open: '[', close: ']', comma: ',' }.invert
+        new(:list, '\[|\]|,(?=.*\])', lambda { |raw| names[raw] })
       end
 
       def key
