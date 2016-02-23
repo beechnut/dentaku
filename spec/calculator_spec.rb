@@ -304,6 +304,14 @@ describe Dentaku::Calculator do
     end
   end
 
+  describe 'dictionary' do
+    it 'handles dictionary' do
+      result = calculator.evaluate('{code: field:code, value: val*10}', 'field:code': '23', val: 10)
+      expect(result[:code]).to eq('23')
+      expect(result[:value]).to eq(100)
+    end
+  end
+
   describe 'case statements' do
     it 'handles complex then statements' do
       formula = <<-FORMULA

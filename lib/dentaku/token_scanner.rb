@@ -35,11 +35,13 @@ module Dentaku
           :negate,
           :operator,
           :grouping,
+          :dictionary,
           :case_statement,
           :comparator,
           :combinator,
           :boolean,
           :function,
+          :key,
           :identifier
         ]
       end
@@ -110,12 +112,21 @@ module Dentaku
 
       def grouping
         names = { open: '(', close: ')', comma: ',' }.invert
-        new(:grouping, '\(|\)|,', lambda { |raw| names[raw] })
+        new(:grouping, '\(|\)|,(?=.*\))', lambda { |raw| names[raw] })
       end
 
       def case_statement
         names = { open: 'case', close: 'end', then: 'then', when: 'when', else: 'else' }.invert
         new(:case, '(case|end|then|when|else)\b', lambda { |raw| names[raw.downcase] })
+      end
+
+      def dictionary
+        names = { open: '{', close: '}', comma: ',' }.invert
+        new(:dictionary, '\{|\}|,(?=.*})', lambda { |raw| names[raw] })
+      end
+
+      def key
+        new(:key, '\w+\b:(?!\w)', lambda { |raw| raw.gsub(/:$/, '').strip.to_sym })
       end
 
       def comparator
