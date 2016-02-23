@@ -5,7 +5,7 @@ require 'bigdecimal/util'
 module Dentaku
   module AST
     class Arithmetic < Operation
-      def initialize(*)
+      def initialize(*args)
         super
         unless valid_node?(left) && valid_node?(right)
           fail ParseError, "#{ self.class } requires numeric operands"
