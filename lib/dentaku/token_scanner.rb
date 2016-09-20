@@ -15,7 +15,7 @@ module Dentaku
         value = raw = m.to_s
         value = @converter.call(raw) if @converter
 
-        return Array(value).map do |v|
+        return [value].flatten(1).map do |v|
           Token === v ? v : Token.new(@category, v, raw)
         end
       end
@@ -28,6 +28,7 @@ module Dentaku
         [
           :null,
           :whitespace,
+          :range,
           :numeric,
           :double_quoted_string,
           :single_quoted_string,
@@ -75,6 +76,12 @@ module Dentaku
 
       def numeric
         new(:numeric, '(\d+(\.\d+)?|\.\d+)\b', lambda { |raw| raw =~ /\./ ? BigDecimal.new(raw) : raw.to_i })
+      end
+
+      def range
+        new(:range, '(\d+(\.\d+)?|\.\d+)\b\.\.(\d+(\.\d+)?|\.\d+)\b', lambda { |raw|
+          Range.new(*raw.split('..').map { |val| val =~ /\./ ? BigDecimal.new(val) : val.to_i })
+        })
       end
 
       def double_quoted_string

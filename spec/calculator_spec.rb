@@ -32,6 +32,7 @@ describe Dentaku::Calculator do
     expect(calculator.evaluate('0.253/0.253')).to eq(1)
     expect(calculator.evaluate('0.253/d', d: 0.253)).to eq(1)
     expect(calculator.evaluate('10 + x', x: 'abc')).to be_nil
+    expect(calculator.evaluate('1..3 = 2')).to eq(true)
   end
 
   describe 'memory' do
@@ -322,7 +323,7 @@ describe Dentaku::Calculator do
       CASE number
       WHEN (2 * 2)
         THEN 1
-      WHEN (2 * 3)
+      WHEN 5..6
         THEN 2
       END
       FORMULA
