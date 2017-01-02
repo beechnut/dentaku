@@ -99,6 +99,64 @@ Dentaku('plums * 1.5', plums: 2)
 #=> 3.0
 ```
 
+Dentaku supports case statements, using standard keywords like `CASE`, `WHEN`,
+`THEN`, and `ELSE`.
+
+
+```ruby
+formula = <<- FORMULA
+  CASE condition
+  WHEN 'one' THEN 1
+  WHEN 'two'
+    2
+  ELSE
+    3
+  END
+FORMULA
+
+calculator.evaluate(formula, condition: 'one')
+#=> 1
+calculator.evaluate(formula, condition: 'two')
+#=> 2
+calculator.evaluate(formula, condition: 'unexpected')
+#=> 3
+
+```
+
+You can also write nested case statements.
+
+```ruby
+formula = <<-FORMULA
+  CASE fruit
+  WHEN 'apple'
+    THEN
+    CASE quantity
+    WHEN 2 THEN 3
+    END
+  WHEN 'banana'
+    THEN
+    CASE quantity
+    WHEN 1 THEN 2
+    END
+  END
+FORMULA
+
+calculator.evaluate(formula, quantity: 1, fruit: 'banana')
+#=> 2
+
+calculator.evaluate(formula, quantity: 2, fruit: 'apple')
+#=> 3
+```
+
+If the case statement is given a value it doesn't expect, it will throw a
+RuntimeError with an explanation. We recommend including an ELSE switch to
+provide a sensible fallback for unexpected cases, or to handle the RuntimeError.
+
+```ruby
+calculator.evaluate(formula, quantity: 4, fruit: 'apple')
+#=> RuntimeError: No block matched the switch value '4'
+```
+
 PERFORMANCE
 -----------
 
@@ -130,6 +188,9 @@ Logic: `< > <= >= <> != = AND OR`
 Functions: `IF NOT MIN MAX ROUND ROUNDDOWN ROUNDUP`
 
 Math: all functions from Ruby's Math module, including `SIN, COS, TAN, ...`
+
+Case statements: `CASE WHEN THEN ELSE END`
+
 
 RESOLVING DEPENDENCIES
 ----------------------

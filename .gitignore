@@ -9,3 +9,4 @@ vendor/*
 /.ruby-gemset
 /.ruby-version
 /.rspec
+vendor/ruby
